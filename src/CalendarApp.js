@@ -9,7 +9,6 @@ export default function CalendarApp() {
       <Provider store={store}>
         <AppRouter />
       </Provider>
-      <div>esto es otro div</div>
     </div>
   );
 }

@@ -3,8 +3,12 @@ import Modal from "react-modal";
 import DateTimePicker from "react-datetime-picker";
 import moment from "moment";
 import Swal from "sweetalert2";
+import { useDispatch, useSelector } from "react-redux";
+import { uiCloseModal } from "../../actions/ui";
+import { eventAddNew } from "../../actions/events";
 
 import "../../styles.css";
+import { types } from "../../types/types";
 
 const customStyles = {
   content: {
@@ -23,9 +27,12 @@ const now = moment().minutes(0).seconds(0).add(1, "hours");
 const nowAddOneHour = now.clone().add(1, "hours");
 
 export default function CalendarModal() {
+  const dispatch = useDispatch();
+
+  const { modalOpen } = useSelector((state) => state.ui);
 
   const [dateStart, setDateStart] = useState(now.toDate());
-  
+
   const [dateEnd, setDateEnd] = useState(nowAddOneHour.toDate());
 
   const [formValue, setformValue] = useState({
@@ -37,63 +44,72 @@ export default function CalendarModal() {
 
   const [titleValid, setTitleValid] = useState(true);
 
-  const closeModal = () => {};
+  const closeModal = () => {
+    dispatch(uiCloseModal());
+  };
 
   const handleStartDateChange = (date) => {
     setDateStart(date);
     setformValue({
-        ...formValue,
-        start: date,
-    })
+      ...formValue,
+      start: date,
+    });
   };
 
   const handleEndDateChange = (date) => {
     setDateEnd(date);
     setformValue({
-        ...formValue,
-        end: date,
-    })
+      ...formValue,
+      end: date,
+    });
   };
 
-  const { title, notes} = formValue;
+  const { title, notes } = formValue;
 
   const handleInputChange = ({ target }) => {
-
-        //e.preventDefault();
-        setformValue({
-            ...formValue,
-            [target.name]:target.value
-        })
-  }
+    //e.preventDefault();
+    setformValue({
+      ...formValue,
+      [target.name]: target.value,
+    });
+  };
 
   const handleSubmit = (e) => {
-
     e.preventDefault();
 
     const momentStart = moment(dateStart);
     const momentEnd = moment(dateEnd);
 
-    if(momentStart.isSameOrAfter(momentEnd)){
-        Swal.fire("Error","La fecha de inicio debe ser menor a la fecha de fin");
-        return;
+    if (momentStart.isSameOrAfter(momentEnd)) {
+      Swal.fire("Error", "La fecha de inicio debe ser menor a la fecha de fin");
+      return;
     }
-    if(title.trim().length < 2){
-        Swal.fire("Error","El titulo no puede estar vacio");
-        setTitleValid(false);
-        return;
+    if (title.trim().length < 2) {
+      Swal.fire("Error", "El titulo no puede estar vacio");
+      setTitleValid(false);
+      return;
     }
-    // if(notes.trim() === ""){
-    //     Swal.fire("Error","Las notas han de tener texto");
-    //     return;
-    // }
 
     console.log(formValue);
+
+    dispatch(
+      eventAddNew({
+        ...formValue,
+        id: new Date().getTime(),
+        user: {
+          _id: "6546444",
+          name: "Juan",
+        },
+      })
+    );
+
     setTitleValid(true);
-  }
+    closeModal();
+  };
 
   return (
     <Modal
-      isOpen={true}
+      isOpen={modalOpen}
       //onAfterOpen={afterOpenModal}
       onRequestClose={closeModal}
       style={customStyles}
@@ -104,12 +120,12 @@ export default function CalendarModal() {
     >
       <h1> Nuevo evento </h1>
       <hr />
-      <form className="container" onSubmit={ handleSubmit }>
+      <form className="container" onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Fecha y hora inicio</label>
           <DateTimePicker
             onChange={handleStartDateChange}
-            value={ dateStart }
+            value={dateStart}
             className="form-control"
           />
         </div>
@@ -118,7 +134,7 @@ export default function CalendarModal() {
           <label>Fecha y hora fin</label>
           <DateTimePicker
             onChange={handleEndDateChange}
-            value={ dateEnd }
+            value={dateEnd}
             className="form-control"
             minDate={dateStart}
           />
@@ -129,12 +145,12 @@ export default function CalendarModal() {
           <label>Titulo y notas</label>
           <input
             type="text"
-            className={ `form-control ${ titleValid ? '' : 'is-invalid' }` }
+            className={`form-control ${titleValid ? "" : "is-invalid"}`}
             placeholder="Título del evento"
             name="title"
             autoComplete="off"
             value={title}
-            onChange={ handleInputChange }
+            onChange={handleInputChange}
           />
           <small id="emailHelp" className="form-text text-muted">
             Una descripción corta
@@ -149,14 +165,14 @@ export default function CalendarModal() {
             rows="5"
             name="notes"
             value={notes}
-            onChange={ handleInputChange }
+            onChange={handleInputChange}
           ></textarea>
           <small id="emailHelp" className="form-text text-muted">
             Información adicional
           </small>
         </div>
 
-        <button type="submit"  className="btn btn-outline-primary btn-block">
+        <button type="submit" className="btn btn-outline-primary btn-block">
           <i className="far fa-save"></i>
           <span> Guardar</span>
         </button>

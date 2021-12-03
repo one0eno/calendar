@@ -3,11 +3,16 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import Navbar from "../ui/NavBar";
 import { messages } from "../../helpers/caledar-messages-es";
+import { useDispatch } from "react-redux";
 
 import "moment/locale/es";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import CalendarEvent from "./CalendarEvent";
 import CalendarModal from "./CalendarModal";
+import { types } from "../../types/types";
+import { uiOpenModal } from "../../actions/ui";
+import { eventSetActive } from "../../actions/events";
+import AddNewFab from "../ui/AddNewFab";
 
 moment.locale("es");
 const localizer = momentLocalizer(moment); // or globalizeLocalizer;
@@ -40,16 +45,19 @@ const events = [
 ];
 
 export default function CalendarScreen() {
+  const dispatch = useDispatch();
+
   const [lastView, setlastView] = useState(
     localStorage.getItem("lastView") || "month"
   );
 
   const onDoubleClick = (e) => {
-    alert(JSON.stringify(e));
+    dispatch(uiOpenModal());
   };
 
   const onSelectEvent = (e) => {
-    alert(JSON.stringify(e));
+    dispatch(eventSetActive(e));
+    dispatch(uiOpenModal());
   };
 
   const onViewChange = (e) => {
@@ -90,7 +98,7 @@ export default function CalendarScreen() {
         eventPropGetter={eventStyleGetter}
         components={{ event: CalendarEvent }}
       />
-
+      <AddNewFab />
       <CalendarModal />
     </div>
   );
