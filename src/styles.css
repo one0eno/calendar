@@ -84,3 +84,20 @@ body {
   top: -23px;
   right: 12px;
 }
+
+.fabs-danger {
+  position: absolute;
+  bottom: 0px;
+  border-radius: 100%;
+  bottom: 25px;
+  font-size: 23px;
+  padding: 25px;
+  left: 25px;
+  width: 25px;
+  height: 25px;
+}
+.fabs-danger i {
+  position: relative;
+  top: -16px;
+  right: 10px;
+}
