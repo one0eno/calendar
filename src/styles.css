@@ -101,3 +101,28 @@ body {
   top: -16px;
   right: 10px;
 }
+
+.loadingcontainer {
+  animation: 1s ease-out 0s 1 slideInFromLeft;
+  display: flex;
+
+  height: 100vh;
+  width: 100vw;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+header {
+  /* This section calls the slideInFromLeft animation we defined above */
+  animation: 1s ease-out 0s 1 slideInFromLeft;
+}

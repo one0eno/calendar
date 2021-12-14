@@ -1,24 +1,50 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
+import { startChecking } from "../actions/auth";
 import LoginScreen from "../Components/auth/LoginScreen";
 import CalendarScreen from "../Components/calendar/CalendarScreen";
+import Loading from "../Components/ui/Loading";
 
-export default function AppRouter(){
+export default function AppRouter() {
+  const { checking, uid } = useSelector((state) => state.auth);
 
-    return (
-        <div>
-            <Router>
-                <Routes>
-                    <Route path="/"  element={<LoginScreen />} />
-                    <Route path="calendar" element={<CalendarScreen />} />
-                    <Route path="/*" element={<Navigate  to="/" />} />
-                </Routes>
-            </Router>
-            {/*
-                exact /login => loginScreen
-                exact calendar =>CalendarScreen
+  const dispatch = useDispatch();
 
-            */}
-        </div>
-    );
+  useEffect(() => {
+    dispatch(startChecking());
+  }, [dispatch]);
+
+  if (checking) {
+    return <Loading />;
+  }
+
+  const isAuthenticate = !!uid ? true : false;
+
+  return (
+    <div>
+      <Router>
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              isAuthenticate ? <Navigate to="/calendar" /> : <LoginScreen />
+            }
+          />
+          <Route
+            path="/calendar"
+            element={
+              isAuthenticate ? <CalendarScreen /> : <Navigate to="/login" />
+            }
+          />
+          <Route path="/*" element={<Navigate to="/login" />} /> *
+        </Routes>
+      </Router>
+    </div>
+  );
 }

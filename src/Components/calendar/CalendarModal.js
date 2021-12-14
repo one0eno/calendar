@@ -12,7 +12,6 @@ import {
 } from "../../actions/events";
 
 import "../../styles.css";
-import { types } from "../../types/types";
 
 const customStyles = {
   content: {

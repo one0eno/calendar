@@ -9,7 +9,7 @@ import "moment/locale/es";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import CalendarEvent from "./CalendarEvent";
 import CalendarModal from "./CalendarModal";
-import { types } from "../../types/types";
+
 import { uiOpenModal } from "../../actions/ui";
 import { eventClearActiveEvent, eventSetActive } from "../../actions/events";
 import AddNewFab from "../ui/AddNewFab";
