@@ -9,7 +9,6 @@ import {
   startEventAddNew,
   startEventUpdated,
   eventClearActiveEvent,
-  eventUpdated,
 } from "../../actions/events";
 
 import "../../styles.css";

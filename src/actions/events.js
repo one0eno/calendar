@@ -1,4 +1,3 @@
-import { documentNotReadyOrSSRTesting } from "react-modal/lib/helpers/ariaAppHider";
 import Swal from "sweetalert2";
 import { fetchConToken } from "../helpers/fetch";
 import { prepareEvents } from "../helpers/prepareEvents";
