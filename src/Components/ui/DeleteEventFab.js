@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { eventDeleted } from "../../actions/events";
+import { startEventDeleted } from "../../actions/events";
 
 import Swal from "sweetalert2";
 
@@ -19,7 +19,7 @@ export default function DeleteEventFab() {
       confirmButtonText: "Si, borrar evento!",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatcth(eventDeleted());
+        dispatcth(startEventDeleted());
         Swal.fire("Eliminado!", "El evento ha sido eliminado", "success");
       }
     });

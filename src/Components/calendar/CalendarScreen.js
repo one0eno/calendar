@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import Navbar from "../ui/NavBar";
@@ -11,7 +11,11 @@ import CalendarEvent from "./CalendarEvent";
 import CalendarModal from "./CalendarModal";
 
 import { uiOpenModal } from "../../actions/ui";
-import { eventClearActiveEvent, eventSetActive } from "../../actions/events";
+import {
+  eventClearActiveEvent,
+  eventSetActive,
+  eventStartLoading,
+} from "../../actions/events";
 import AddNewFab from "../ui/AddNewFab";
 import DeleteEventFab from "../ui/DeleteEventFab";
 
@@ -49,6 +53,7 @@ export default function CalendarScreen() {
   const dispatch = useDispatch();
   const { events } = useSelector((state) => state.calendar);
   const { activeEvent } = useSelector((state) => state.calendar);
+  const { uid: usuarioActivo } = useSelector((state) => state.auth);
   const [lastView, setlastView] = useState(
     localStorage.getItem("lastView") || "month"
   );
@@ -74,7 +79,10 @@ export default function CalendarScreen() {
   const eventStyleGetter = (event, start, end, isSelected) => {
     //var backgroundColor = event.bgcolor;
     var style = {
-      backgroundColor: "#367CF7" /*backgroundColor*/,
+      backgroundColor:
+        event.user._id === usuarioActivo
+          ? "#367CF7"
+          : "red" /*backgroundColor*/,
       borderRadius: "0px",
       opacity: 0.8,
       display: "block",
@@ -85,6 +93,10 @@ export default function CalendarScreen() {
       style: style,
     };
   };
+
+  useEffect(() => {
+    dispatch(eventStartLoading());
+  }, [dispatch]);
 
   return (
     <div className="calendar-screen">
@@ -106,7 +118,9 @@ export default function CalendarScreen() {
         eventPropGetter={eventStyleGetter}
         components={{ event: CalendarEvent }}
       />
-      {activeEvent && <DeleteEventFab />}
+      {activeEvent && activeEvent.user._id === usuarioActivo && (
+        <DeleteEventFab />
+      )}
 
       <AddNewFab />
       <CalendarModal />

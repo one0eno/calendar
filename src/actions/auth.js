@@ -60,9 +60,12 @@ export const startChecking = () => {
 export const startLogOut = () => {
   return (dispatch) => {
     localStorage.clear("token");
+    dispatch(eventLogout());
     dispatch(logOut());
   };
 };
+
+const eventLogout = () => ({ type: types.eventLogoout });
 
 const checkingFinish = () => ({
   type: types.authCheckingFinish,
